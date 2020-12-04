@@ -2,6 +2,8 @@ from collections import defaultdict, deque
 import datetime
 import pickle
 import time
+from itertools import groupby
+from pycocotools import mask as maskutil
 
 import torch
 import torch.distributed as dist
@@ -322,3 +324,15 @@ def init_distributed_mode(args):
                                          world_size=args.world_size, rank=args.rank)
     torch.distributed.barrier()
     setup_for_distributed(args.rank == 0)
+    
+def binary_mask_to_rle(binary_mask):
+    rle = {'counts': [], 'size': list(binary_mask.shape)}
+    counts = rle.get('counts')
+    for i, (value, elements) in enumerate(groupby(binary_mask.ravel(order='F'))):
+        if i == 0 and value == 1:
+            counts.append(0)
+        counts.append(len(list(elements)))
+    compressed_rle = maskutil.frPyObjects(rle, rle.get('size')[0], 
+                                          rle.get('size')[1])
+    compressed_rle['counts'] = str(compressed_rle['counts'], encoding='utf-8')
+    return compressed_rle
