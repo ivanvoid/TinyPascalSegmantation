@@ -1,0 +1,4 @@
+SYSTEM:
+    MODEL_PATH: './models/model_2.pth'
+TRAIN:
+    N_EPOCHS: 10
