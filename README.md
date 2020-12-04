@@ -12,6 +12,7 @@ Semantic segmentation for Tiny Pascal dataset.
 ├── train.py            <- Script for model training
 ├── test.py             <- Script for inference 
 ├── README.md           <- This file
+├── Report_0860838.pdf  <- Project report
 </pre>
 
 ## Reproducing steps
